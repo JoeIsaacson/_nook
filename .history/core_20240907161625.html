@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOOK</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: purple; 
+            color: white; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 48px;
+        }
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #wallet-info {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@coinbase/wallet-sdk@3.6.3/dist/index.min.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js"></script>
+</head>
+<body>
+    <h1>NOOK</h1>
+    <button id="connect-wallet">Connect Coinbase Wallet</button>
+    <div id="wallet-info"></div>
+
+    <script>
+        const connectButton = document.getElementById('connect-wallet');
+        const walletInfo = document.getElementById('wallet-info');
+        let provider, signer, address;
+
+        const coinbaseWallet = new CoinbaseWalletSDK({
+            appName: 'NOOK',
+            appLogoUrl: 'https://example.com/logo.png',
+            darkMode: false
+        });
+
+        async function connectWallet() {
+            try {
+                provider = coinbaseWallet.makeWeb3Provider('https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID', 1);
+                await provider.send('eth_requestAccounts', []);
+                signer = provider.getSigner();
+                address = await signer.getAddress();
+                connectButton.textContent = 'Wallet Connected';
+                await displayBalances();
+            } catch (error) {
+                console.error('Failed to connect wallet:', error);
+            }
+        }
+
+        async function getBalance(network) {
+            const provider = new ethers.providers.JsonRpcProvider(network.rpcUrl);
+            const balance = await provider.getBalance(address);
+            const ethBalance = ethers.utils.formatEther(balance);
+            const usdBalance = await convertToUSD(ethBalance);
+            return { eth: ethBalance, usd: usdBalance };
+        }
+
+        async function convertToUSD(ethAmount) {
+            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+            const data = await response.json();
+            const ethPrice = data.ethereum.usd;
+            return (ethAmount * ethPrice).toFixed(2);
+        }
+
+        async function displayBalances() {
+            const networks = [
+                { name: 'Ethereum', rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID' },
+                { name: 'Base', rpcUrl: 'https://mainnet.base.org' }
+            ];
+
+            let balanceInfo = '';
+            for (const network of networks) {
+                const balance = await getBalance(network);
+                balanceInfo += `${network.name}: ${balance.eth} ETH ($${balance.usd})<br>`;
+            }
+
+            walletInfo.innerHTML = `
+                <p>Wallet Address: ${address}</p>
+                <p>Balances:<br>${balanceInfo}</p>
+            `;
+        }
+
+        connectButton.addEventListener('click', connectWallet);
+    </script>
+</body>
+</html>
+
