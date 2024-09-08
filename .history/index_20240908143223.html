@@ -3,27 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOOK - Fixed USDC Transfer (Sepolia Testnet)</title>
+    <title>NOOK - USDC Sender (Goerli Testnet)</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script src="js/coinbase-wallet-sdk.min.js"></script>
 </head>
 <body>
-    <h1>NOOK - Fixed USDC Transfer (Sepolia Testnet)</h1>
+    <h1>NOOK - USDC Sender - testnet</h1>
     <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
     <button onclick="clearMemory()">Clear</button>
     <button onclick="testSDK()">Test SDK</button>
     <div id="wallet-info"></div>
     <div id="usdc-balance"></div>
-    
-    <button onclick="approveAndTransfer()">Approve and Transfer 0.01 USDC</button>
+
+    <hr>
+
+    <!-- New elements for contract interaction -->
+    <button onclick="deployContract()">Deploy Contract</button>
+    <button onclick="fundContract()">Fund Contract (0.001 USDC)</button>
+    <button onclick="sendUSDC()">Send 0.0001 USDC</button>
+    <button onclick="getContractBalance()">Get Contract Balance</button>
+    <div id="contract-info"></div>
 
     <script>
         let web3;
         let provider;
+        let contract;
         let userAddress;
         const USDC_ADDRESS = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'; // Sepolia USDC address
-        const RECIPIENT_ADDRESS = '0xcDeBcF59Ee33978320CA2ebCD433aCE6144C63C4';
-        const TRANSFER_AMOUNT = '0.01';
+        // const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'; // Mainnet USDC address
 
         async function connectCoinbaseWallet() {
             const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
@@ -33,7 +40,8 @@
                 darkMode: false
             });
 
-            provider = coinbaseWallet.makeWeb3Provider("https://sepolia.infura.io/v3/YOUR_INFURA_PROJECT_ID", 11155111);
+            // Update the provider to use Sepolia
+            provider = coinbaseWallet.makeWeb3Provider("https://sepolia.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 11155111); // Sepolia network ID
 
             try {
                 const accounts = await provider.request({ method: 'eth_requestAccounts' });
@@ -41,6 +49,7 @@
                 userAddress = accounts[0];
                 document.getElementById('wallet-info').innerHTML = `Connected: ${userAddress}`;
                 
+                // Get and display USDC balance
                 await updateUSDCBalance();
             } catch (error) {
                 console.error('Failed to connect Coinbase Wallet:', error);
@@ -64,68 +73,45 @@
                 }
             ], USDC_ADDRESS);
 
+            console.log(usdcContract);
+
             try {
                 const balance = await usdcContract.methods.balanceOf(userAddress).call();
                 const formattedBalance = (balance / 1e6).toFixed(6);
                 document.getElementById('usdc-balance').innerHTML = `USDC Balance: ${formattedBalance} USDC`;
             } catch (error) {
                 console.error('Error fetching USDC balance:', error);
-                document.getElementById('usdc-balance').innerHTML = 'Error fetching USDC balance';
+                document.getElementById('usdc-balance').innerHTML = 'Error fetching USDC balance!';
             }
         }
 
-        async function approveAndTransfer() {
-            if (!web3 || !userAddress) {
+        async function deployContract() {
+            if (!web3) {
                 alert('Please connect your wallet first');
                 return;
             }
 
-            console.log(web3);
-
-            const usdcContract = new web3.eth.Contract([
-                {
-                    "constant": false,
-                    "inputs": [
-                        {"name": "_spender", "type": "address"},
-                        {"name": "_value", "type": "uint256"}
-                    ],
-                    "name": "approve",
-                    "outputs": [{"name": "", "type": "bool"}],
-                    "type": "function"
-                },
-                {
-                    "constant": false,
-                    "inputs": [
-                        {"name": "_to", "type": "address"},
-                        {"name": "_value", "type": "uint256"}
-                    ],
-                    "name": "transfer",
-                    "outputs": [{"name": "", "type": "bool"}],
-                    "type": "function"
-                }
-            ], USDC_ADDRESS);
-
-            const amountInWei = web3.utils.toWei(TRANSFER_AMOUNT, 'mwei'); // USDC has 6 decimals
-
-            try {
-                // Perform the transfer directly (no need for approve in this case)
-                await usdcContract.methods.transfer(RECIPIENT_ADDRESS, amountInWei).send({ from: userAddress });
-                alert('Transfer of 0.01 USDC successful!');
-
-                // Update the USDC balance display
-                await updateUSDCBalance();
-            } catch (error) {
-                console.error('Error in transfer:', error);
-                alert('Error in transfer. Check console for details.');
-            }
+            const abi = [{"inputs":[{"internalType":"address","name":"_usdcAddress","type":"address"}],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[],"name":"AMOUNT","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"RECIPIENT","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"fundContract","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"getContractBalance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"sendUSDC","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"usdcToken","outputs":[{"internalType":"contract IERC20","name":"","type":"address"}],"stateMutability":"view","type":"function"}];
         }
-
+        
         function clearMemory() {
+            // Reset variables
             web3 = undefined;
             provider = undefined;
-            userAddress = undefined;
+
+            // Clear the wallet info display
             document.getElementById('wallet-info').innerHTML = '';
-            document.getElementById('usdc-balance').innerHTML = '';
+
+            // If a provider is connected, disconnect it
+            if (provider && provider.disconnect) {
+                provider.disconnect();
+            }
+
+            // Remove event listeners
+            if (provider) {
+                provider.removeAllListeners();
+            }
+
             console.log('Memory cleared');
         }
 
@@ -133,10 +119,31 @@
             if (typeof CoinbaseWalletSDK === 'function') {
                 console.log('Coinbase Wallet SDK is loaded and accessible');
                 alert('Coinbase Wallet SDK is loaded and accessible');
+
+                console.log('SDK contents:', CoinbaseWalletSDK);
+            console.log('SDK prototype:', Object.getOwnPropertyNames(CoinbaseWalletSDK.prototype));
+            console.log('SDK static properties:', Object.getOwnPropertyNames(CoinbaseWalletSDK));
+
             } else {
                 console.error('Coinbase Wallet SDK is not loaded or not accessible');
                 alert('Coinbase Wallet SDK is not loaded or not accessible');
             }
+        }
+
+        // Event listeners
+        if (provider) {
+            provider.on("accountsChanged", async (accounts) => {
+                await updateWalletInfo(accounts[0]);
+            });
+
+            provider.on("chainChanged", (chainId) => {
+                console.log('Chain changed:', chainId);
+            });
+
+            provider.on("disconnect", (code, reason) => {
+                console.log('Disconnected:', code, reason);
+                document.getElementById('wallet-info').innerHTML = 'Wallet disconnected';
+            });
         }
     </script>
 </body>

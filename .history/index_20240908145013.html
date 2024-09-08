@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOOK - Fixed USDC Transfer (Sepolia Testnet)</title>
+    <title>NOOK - USDC Balance Checker (Sepolia Testnet)</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script src="js/coinbase-wallet-sdk.min.js"></script>
 </head>
 <body>
-    <h1>NOOK - Fixed USDC Transfer (Sepolia Testnet)</h1>
+    <h1>NOOK - USDC Balance Checker (Sepolia Testnet)</h1>
     <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
     <button onclick="clearMemory()">Clear</button>
     <button onclick="testSDK()">Test SDK</button>
     <div id="wallet-info"></div>
     <div id="usdc-balance"></div>
-    
-    <button onclick="approveAndTransfer()">Approve and Transfer 0.01 USDC</button>
 
     <script>
         let web3;
         let provider;
         let userAddress;
         const USDC_ADDRESS = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'; // Sepolia USDC address
-        const RECIPIENT_ADDRESS = '0xcDeBcF59Ee33978320CA2ebCD433aCE6144C63C4';
-        const TRANSFER_AMOUNT = '0.01';
 
         async function connectCoinbaseWallet() {
             const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
@@ -71,52 +67,6 @@
             } catch (error) {
                 console.error('Error fetching USDC balance:', error);
                 document.getElementById('usdc-balance').innerHTML = 'Error fetching USDC balance';
-            }
-        }
-
-        async function approveAndTransfer() {
-            if (!web3 || !userAddress) {
-                alert('Please connect your wallet first');
-                return;
-            }
-
-            console.log(web3);
-
-            const usdcContract = new web3.eth.Contract([
-                {
-                    "constant": false,
-                    "inputs": [
-                        {"name": "_spender", "type": "address"},
-                        {"name": "_value", "type": "uint256"}
-                    ],
-                    "name": "approve",
-                    "outputs": [{"name": "", "type": "bool"}],
-                    "type": "function"
-                },
-                {
-                    "constant": false,
-                    "inputs": [
-                        {"name": "_to", "type": "address"},
-                        {"name": "_value", "type": "uint256"}
-                    ],
-                    "name": "transfer",
-                    "outputs": [{"name": "", "type": "bool"}],
-                    "type": "function"
-                }
-            ], USDC_ADDRESS);
-
-            const amountInWei = web3.utils.toWei(TRANSFER_AMOUNT, 'mwei'); // USDC has 6 decimals
-
-            try {
-                // Perform the transfer directly (no need for approve in this case)
-                await usdcContract.methods.transfer(RECIPIENT_ADDRESS, amountInWei).send({ from: userAddress });
-                alert('Transfer of 0.01 USDC successful!');
-
-                // Update the USDC balance display
-                await updateUSDCBalance();
-            } catch (error) {
-                console.error('Error in transfer:', error);
-                alert('Error in transfer. Check console for details.');
             }
         }
 
