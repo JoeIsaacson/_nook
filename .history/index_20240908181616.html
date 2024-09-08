@@ -3,21 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOOK</title>
+    <title>NOOK - Fixed USDC Transfer (Sepolia Testnet)</title>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
     <script src="https://unpkg.com/@coinbase/wallet-sdk@3.6.3/dist/index.min.js"></script>
-    <script>
-        if (typeof CoinbaseWalletSDK !== 'undefined') {
-            console.log('Coinbase Wallet SDK loaded successfully');
-        } else {
-            console.error('Failed to load Coinbase Wallet SDK');
-        }
-    </script>
 </head>
 <body>
-    <h1>NOOK</h1>
+    <h1>NOOK - Fixed USDC Transfer (Sepolia BASE Testnet)</h1>
     <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
     <button onclick="clearMemory()">Clear</button>
+    <button onclick="testSDK()">Test SDK</button>
     <button onclick="showUSDCBalance()">Show USDC Balance</button>
     <div id="wallet-info"></div>
     <div id="usdc-balance"></div>
@@ -126,6 +120,16 @@
             document.getElementById('wallet-info').innerHTML = '';
             document.getElementById('usdc-balance').innerHTML = '';
             console.log('Memory cleared');
+        }
+
+        function testSDK() {
+            if (typeof CoinbaseWalletSDK === 'function') {
+                console.log('Coinbase Wallet SDK is loaded and accessible');
+                alert('Coinbase Wallet SDK is loaded and accessible');
+            } else {
+                console.error('Coinbase Wallet SDK is not loaded or not accessible');
+                alert('Coinbase Wallet SDK is not loaded or not accessible');
+            }
         }
     </script>
 </body>
