@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOEYS APP</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.1/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/@coinbase/wallet-sdk@3.6.3/dist/index.min.js"></script>
+</head>
+<body>
+    <h1>NOOK</h1>
+    <button onclick="connectWallet()">Connect with WalletConnect</button>
+    <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
+    <div id="wallet-info"></div>
+
+    <script>
+        const url = 'https://api.llama.fi/protocols';
+        let web3;
+        let provider;
+        let coinbaseWallet;
+
+        const ENS_RESOLVER_ABI = [{"inputs":[{"internalType":"bytes32","name":"node","type":"bytes32"}],"name":"addr","outputs":[{"internalType":"address payable","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"addr","type":"address"}],"name":"getNames","outputs":[{"internalType":"string[]","name":"","type":"string[]"}],"stateMutability":"view","type":"function"}];
+        const ENS_RESOLVER_ADDRESS = '0x3671aE578E63FdF66ad4F3E12CC0c0d71Ac7510C'; // ENS Public Resolver on Mainnet
+
+        async function getEthPrice() {
+            try {
+                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+                const data = await response.json();
+                return data.ethereum.usd;
+            } catch (error) {
+                console.error('Error fetching ETH price:', error);
+                return null;
+            }
+        }
+
+        async function getWalletBalance(address) {
+            try {
+                const balance = await web3.eth.getBalance(address);
+                const balanceInEth = web3.utils.fromWei(balance, 'ether');
+                const ethPrice = await getEthPrice();
+                const balanceInUsd = ethPrice ? (parseFloat(balanceInEth) * ethPrice).toFixed(2) : null;
+                return {
+                    eth: parseFloat(balanceInEth).toFixed(4),
+                    usd: balanceInUsd
+                };
+            } catch (error) {
+                console.error('Error getting wallet balance:', error);
+                return null;
+            }
+        }
+
+        async function getENSName(address) {
+            try {
+                const resolver = new web3.eth.Contract(ENS_RESOLVER_ABI, ENS_RESOLVER_ADDRESS);
+                const names = await resolver.methods.getNames([address]).call();
+                return names && names.length > 0 && names[0] !== '' ? names[0] : null;
+            } catch (error) {
+                console.error('Error getting ENS name:', error);
+                return null;
+            }
+        }
+
+        async function updateWalletInfo(account) {
+            const balance = await getWalletBalance(account);
+            const ensName = await getENSName(account);
+            
+            let displayName = ensName || account;
+            let infoHtml = `Connected: ${displayName}`;
+            if (ensName) {
+                infoHtml += `<br>Address: ${account}`;
+            }
+            if (balance) {
+                infoHtml += `<br>Balance: ${balance.eth} ETH`;
+                if (balance.usd) {
+                    infoHtml += ` (≈ $${balance.usd} USD)`;
+                }
+            }
+            document.getElementById('wallet-info').innerHTML = infoHtml;
+            
+            console.log('Connected:', displayName);
+            if (balance) {
+                console.log('Balance:', balance.eth, 'ETH');
+                if (balance.usd) {
+                    console.log('Balance in USD:', balance.usd, 'USD');
+                }
+            }
+        }
+
+        async function connectWallet() {
+            provider = new WalletConnectProvider.default({
+                infuraId: "6b5b19c61d1341ed91e2e9cf43dd8280"
+            });
+
+            try {
+                await provider.enable();
+                web3 = new Web3(provider);
+                const accounts = await web3.eth.getAccounts();
+                const account = accounts[0];
+                await updateWalletInfo(account);
+                console.log('Connected:', account);
+            } catch (error) {
+                console.error('Failed to connect wallet:', error);
+                document.getElementById('wallet-info').innerHTML = 'Failed to connect wallet';
+            }
+        }
+
+        async function connectCoinbaseWallet() {
+            const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
+            coinbaseWallet = new CoinbaseWalletSDK({
+                appName: "Top 3 DeFi Lending Protocols",
+                appLogoUrl: "https://example.com/logo.png", // Replace with your app's logo if desired
+                darkMode: false
+            });
+
+            const ethereum = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
+
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                web3 = new Web3(ethereum);
+                const account = accounts[0];
+                await updateWalletInfo(account);
+                console.log('Connected to Coinbase Wallet:', account);
+            } catch (error) {
+                console.error('Failed to connect Coinbase Wallet:', error);
+                document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet';
+            }
+        }
+
+        // Handle account changes
+        if (provider) {
+            provider.on("accountsChanged", async (accounts) => {
+                await updateWalletInfo(accounts[0]);
+            });
+
+            // Handle chain changes
+            provider.on("chainChanged", (chainId) => {
+                console.log('Chain changed:', chainId);
+                // You might want to reload the page or update some UI here
+            });
+
+            // Handle disconnection
+            provider.on("disconnect", (code, reason) => {
+                console.log('Disconnected:', code, reason);
+                document.getElementById('wallet-info').innerHTML = 'Wallet disconnected';
+            });
+        }
+    </script>
+</body>
+</html>
+

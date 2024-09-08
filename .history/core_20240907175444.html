@@ -24,15 +24,7 @@
         let provider;
         let coinbaseWallet;
 
-        async function getENSName(address) {
-            try {
-                const ensName = await web3.eth.ens.getName(address);
-                return ensName || null;
-            } catch (error) {
-                console.error('Error getting ENS name:', error);
-                return null;
-            }
-        }
+        // Removed getENSName function
 
         async function getEthPrice() {
             try {
@@ -61,11 +53,25 @@
             }
         }
 
+        async function getENSName(address) {
+            try {
+                const name = await web3.eth.ens.getName(address);
+                return name || null;
+            } catch (error) {
+                console.error('Error getting ENS name:', error);
+                return null;
+            }
+        }
+
         async function updateWalletInfo(account) {
-            const ensName = await getENSName(account);
             const balance = await getWalletBalance(account);
-            const displayName = ensName || account;
+            const ensName = await getENSName(account);
+            
+            let displayName = ensName || account;
             let infoHtml = `Connected: ${displayName}`;
+            if (ensName) {
+                infoHtml += `<br>Address: ${account}`;
+            }
             if (balance) {
                 infoHtml += `<br>Balance: ${balance.eth} ETH`;
                 if (balance.usd) {
@@ -73,9 +79,8 @@
                 }
             }
             document.getElementById('wallet-info').innerHTML = infoHtml;
-            if (ensName) {
-                console.log('ENS Name:', ensName);
-            }
+            
+            console.log('Connected:', displayName);
             if (balance) {
                 console.log('Balance:', balance.eth, 'ETH');
                 if (balance.usd) {

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOEYS APP</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        button { margin: 10px; padding: 10px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.1/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://unpkg.com/@coinbase/wallet-sdk@3.6.3/dist/index.min.js"></script>
+</head>
+<body>
+    <h1>NOOK</h1>
+    <button onclick="connectWallet()">Connect with WalletConnect</button>
+    <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
+    <div id="wallet-info"></div>
+
+    <script>
+        let web3;
+        let provider;
+
+        const BASE_RPC_URL = 'https://mainnet.base.org';
+        const BASE_CHAIN_ID = 8453;
+        const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913'; // USDC on BASE
+        const USDC_ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}];
+
+        async function getUSDCBalance(address) {
+            try {
+                const usdcContract = new web3.eth.Contract(USDC_ABI, USDC_ADDRESS);
+                const balance = await usdcContract.methods.balanceOf(address).call();
+                return (balance / 1e6).toFixed(2); // USDC has 6 decimal places
+            } catch (error) {
+                console.error('Error getting USDC balance:', error);
+                return null;
+            }
+        }
+
+        async function updateWalletInfo(account) {
+            
+            console.log("account", account);
+
+            const usdcBalance = await getUSDCBalance(account);
+            
+            let infoHtml = `Connected: ${account}`;
+            if (usdcBalance !== null) {
+                infoHtml += `<br>USDC Balance on BASE: ${usdcBalance} USDC`;
+            } else {
+                infoHtml += `<br>Failed to fetch USDC balance on BASE`;
+            }
+            document.getElementById('wallet-info').innerHTML = infoHtml;
+        }
+
+        async function connectWallet() {
+            provider = new WalletConnectProvider.default({
+                rpc: {
+                    [BASE_CHAIN_ID]: BASE_RPC_URL
+                },
+                chainId: BASE_CHAIN_ID
+            });
+
+            try {
+                await provider.enable();
+                web3 = new Web3(provider);
+                const accounts = await web3.eth.getAccounts();
+                await updateWalletInfo(accounts[0]);
+            } catch (error) {
+                console.error('Failed to connect wallet:', error);
+                document.getElementById('wallet-info').innerHTML = 'Failed to connect wallet';
+            }
+        }
+
+        async function connectCoinbaseWallet() {
+            const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
+            const coinbaseWallet = new CoinbaseWalletSDK({
+                appName: "NOOK",
+                appLogoUrl: "https://example.com/logo.png",
+                darkMode: false
+            });
+
+            const ethereum = coinbaseWallet.makeWeb3Provider(BASE_RPC_URL, BASE_CHAIN_ID);
+
+            try {
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                web3 = new Web3(ethereum);
+                await updateWalletInfo(accounts[0]);
+            } catch (error) {
+                console.error('Failed to connect Coinbase Wallet:', error);
+                document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet';
+            }
+        }
+
+        if (provider) {
+            provider.on("accountsChanged", async (accounts) => {
+                await updateWalletInfo(accounts[0]);
+            });
+
+            provider.on("chainChanged", (chainId) => {
+                console.log('Chain changed:', chainId);
+            });
+
+            provider.on("disconnect", (code, reason) => {
+                console.log('Disconnected:', code, reason);
+                document.getElementById('wallet-info').innerHTML = 'Wallet disconnected';
+            });
+        }
+    </script>
+</body>
+</html>
+
