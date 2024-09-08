@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOEYS APP</title>
+    <title>nook</title>
     <style>
         body { font-family: Arial, sans-serif; text-align: center; }
         button { margin: 10px; padding: 10px; }
@@ -23,6 +23,26 @@
 
         const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
         const USDC_ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}];
+
+        async function connectCoinbaseWallet() {
+            const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
+            const coinbaseWallet = new CoinbaseWalletSDK({
+                appName: "NOOK",
+                appLogoUrl: "https://example.com/logo.png",
+                darkMode: false
+            });
+
+            provider = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
+
+            try {
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                web3 = new Web3(provider);
+                await updateWalletInfo(accounts[0]);
+            } catch (error) {
+                console.error('Failed to connect Coinbase Wallet:', error);
+                document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet';
+            }
+        }
 
         async function getUSDCBalance(address) {
             try {
@@ -45,30 +65,6 @@
                 infoHtml += `<br>Failed to fetch USDC balance`;
             }
             document.getElementById('wallet-info').innerHTML = infoHtml;
-        }
-
-        async function connectCoinbaseWallet() {
-           
-            const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
-            const coinbaseWallet = new CoinbaseWalletSDK({
-                appName: "NOOK",
-                appLogoUrl: "https://example.com/logo.png",
-                darkMode: false
-            });
-
-            console.log(CoinbaseWalletSDK);
-            console.log(coinbaseWallet);
-
-            provider = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
-
-            try {
-                const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                web3 = new Web3(provider);
-                await updateWalletInfo(accounts[0]);
-            } catch (error) {
-                console.error('Failed to connect Coinbase Wallet:', error);
-                document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet';
-            }
         }
 
         function clearMemory() {

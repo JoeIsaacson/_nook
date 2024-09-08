@@ -49,15 +49,14 @@
 
         async function connectCoinbaseWallet() {
            
+            
+
             const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
             const coinbaseWallet = new CoinbaseWalletSDK({
                 appName: "NOOK",
                 appLogoUrl: "https://example.com/logo.png",
                 darkMode: false
             });
-
-            console.log(CoinbaseWalletSDK);
-            console.log(coinbaseWallet);
 
             provider = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
 
