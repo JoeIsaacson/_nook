@@ -97,11 +97,6 @@
             if (typeof CoinbaseWalletSDK === 'function') {
                 console.log('Coinbase Wallet SDK is loaded and accessible');
                 alert('Coinbase Wallet SDK is loaded and accessible');
-
-                console.log('SDK contents:', CoinbaseWalletSDK);
-            console.log('SDK prototype:', Object.getOwnPropertyNames(CoinbaseWalletSDK.prototype));
-            console.log('SDK static properties:', Object.getOwnPropertyNames(CoinbaseWalletSDK));
-
             } else {
                 console.error('Coinbase Wallet SDK is not loaded or not accessible');
                 alert('Coinbase Wallet SDK is not loaded or not accessible');

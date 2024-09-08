@@ -15,7 +15,6 @@
     <h1>NOOK</h1>
     <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
     <button onclick="clearMemory()">Clear</button>
-    <button onclick="testSDK()">Test SDK</button>
     <div id="wallet-info"></div>
 
     <script>
@@ -91,21 +90,6 @@
             }
 
             console.log('Memory cleared');
-        }
-
-        function testSDK() {
-            if (typeof CoinbaseWalletSDK === 'function') {
-                console.log('Coinbase Wallet SDK is loaded and accessible');
-                alert('Coinbase Wallet SDK is loaded and accessible');
-
-                console.log('SDK contents:', CoinbaseWalletSDK);
-            console.log('SDK prototype:', Object.getOwnPropertyNames(CoinbaseWalletSDK.prototype));
-            console.log('SDK static properties:', Object.getOwnPropertyNames(CoinbaseWalletSDK));
-
-            } else {
-                console.error('Coinbase Wallet SDK is not loaded or not accessible');
-                alert('Coinbase Wallet SDK is not loaded or not accessible');
-            }
         }
 
         // Event listeners

@@ -5,17 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JOEYS APP</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; }
-        button { margin: 10px; padding: 10px; }
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        button { 
+            margin: 10px; 
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+        }
+        #wallet-info {
+            word-break: break-all;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
-    <script src="js/coinbase-wallet-sdk.min.js"></script>
+    <script src="https://unpkg.com/@coinbase/wallet-sdk@3.6.3/dist/index.min.js"></script>
+
+    <script>
+        function checkScriptLoaded() {
+            if (window.CoinbaseWalletSDK) {
+                console.log("Coinbase Wallet SDK loaded successfully");
+            } else {
+                console.log("Coinbase Wallet SDK not loaded yet");
+            }
+        }
+
+        // Run this after you expect the script to be loaded
+        setTimeout(checkScriptLoaded, 1000);
+    </script>
 </head>
 <body>
     <h1>NOOK</h1>
     <button onclick="connectCoinbaseWallet()">Connect Coinbase Wallet</button>
     <button onclick="clearMemory()">Clear</button>
-    <button onclick="testSDK()">Test SDK</button>
     <div id="wallet-info"></div>
 
     <script>
@@ -24,6 +51,43 @@
 
         const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
         const USDC_ABI = [{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"type":"function"}];
+
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        async function connectCoinbaseWallet() {
+            const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
+            const coinbaseWallet = new CoinbaseWalletSDK({
+                appName: "NOOK",
+                appLogoUrl: "https://example.com/logo.png",
+                darkMode: false
+            });
+
+            if (isMobile()) {
+                // Mobile-specific connection logic
+                provider = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
+                try {
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    web3 = new Web3(provider);
+                    await updateWalletInfo(accounts[0]);
+                } catch (error) {
+                    console.error('Failed to connect Coinbase Wallet on mobile:', error);
+                    document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet on mobile';
+                }
+            } else {
+                // Desktop connection logic
+                provider = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
+                try {
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    web3 = new Web3(provider);
+                    await updateWalletInfo(accounts[0]);
+                } catch (error) {
+                    console.error('Failed to connect Coinbase Wallet:', error);
+                    document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet';
+                }
+            }
+        }
 
         async function getUSDCBalance(address) {
             try {
@@ -48,30 +112,6 @@
             document.getElementById('wallet-info').innerHTML = infoHtml;
         }
 
-        async function connectCoinbaseWallet() {
-           
-            const CoinbaseWalletSDK = window.CoinbaseWalletSDK;
-            const coinbaseWallet = new CoinbaseWalletSDK({
-                appName: "NOOK",
-                appLogoUrl: "https://example.com/logo.png",
-                darkMode: false
-            });
-
-            console.log(CoinbaseWalletSDK);
-            console.log(coinbaseWallet);
-
-            provider = coinbaseWallet.makeWeb3Provider("https://mainnet.infura.io/v3/6b5b19c61d1341ed91e2e9cf43dd8280", 1);
-
-            try {
-                const accounts = await provider.request({ method: 'eth_requestAccounts' });
-                web3 = new Web3(provider);
-                await updateWalletInfo(accounts[0]);
-            } catch (error) {
-                console.error('Failed to connect Coinbase Wallet:', error);
-                document.getElementById('wallet-info').innerHTML = 'Failed to connect Coinbase Wallet';
-            }
-        }
-
         function clearMemory() {
             // Reset variables
             web3 = undefined;
@@ -91,21 +131,6 @@
             }
 
             console.log('Memory cleared');
-        }
-
-        function testSDK() {
-            if (typeof CoinbaseWalletSDK === 'function') {
-                console.log('Coinbase Wallet SDK is loaded and accessible');
-                alert('Coinbase Wallet SDK is loaded and accessible');
-
-                console.log('SDK contents:', CoinbaseWalletSDK);
-            console.log('SDK prototype:', Object.getOwnPropertyNames(CoinbaseWalletSDK.prototype));
-            console.log('SDK static properties:', Object.getOwnPropertyNames(CoinbaseWalletSDK));
-
-            } else {
-                console.error('Coinbase Wallet SDK is not loaded or not accessible');
-                alert('Coinbase Wallet SDK is not loaded or not accessible');
-            }
         }
 
         // Event listeners
