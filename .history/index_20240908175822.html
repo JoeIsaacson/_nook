@@ -22,8 +22,8 @@
         let web3;
         let provider;
         let userAddress;
-        // const USDC_ADDRESS = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'; // Sepolia USDC address
-        const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // BASE Sepolia USDC address
+        //const USDC_ADDRESS = '0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238'; // Sepolia USDC address
+        const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c65B81318D363E5D60589'; // BASE Sepolia USDC address
         const RECIPIENT_ADDRESS = '0xcDeBcF59Ee33978320CA2ebCD433aCE6144C63C4';
         const TRANSFER_AMOUNT = '0.01';
 
@@ -53,10 +53,6 @@
                 console.error('Web3 or user address not available');
                 return;
             }
-
-            console.log(web3);
-            console.log(userAddress);
-            console.log(web3.eth.Contract);
 
             const usdcContract = new web3.eth.Contract([
                 {
