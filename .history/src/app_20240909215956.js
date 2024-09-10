@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './app.css'; // Import the CSS file
+import './App.css'; // Import the CSS file
 
 const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // BASE Sepolia USDC address
 const RECIPIENT_ADDRESS = '0xcDeBcF59Ee33978320CA2ebCD433aCE6144C63C4'; // JMART

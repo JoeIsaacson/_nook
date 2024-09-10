@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Web3 from 'web3';
 import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './app.css'; // Import the CSS file
 
 const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // BASE Sepolia USDC address
 const RECIPIENT_ADDRESS = '0xcDeBcF59Ee33978320CA2ebCD433aCE6144C63C4'; // JMART
@@ -78,6 +77,8 @@ function App() {
       const balance = await web3.eth.getBalance(userAddress);
       console.log(balance);
       const balanceInEth = web3.utils.fromWei(balance, 'ether');
+      const balanceInUSDC = web3.utils.fromWei(balance, 'USDC');
+      console.log(balanceInUSDC);
       setEthBalance(balanceInEth);
       console.log(`ETH Balance: ${balanceInEth} ETH`);
     } catch (error) {
@@ -86,7 +87,7 @@ function App() {
   };
 
   return (
-    <div className="container mt-5 container-custom">
+    <div className="container mt-5">
       <h1 className="mb-4">NOOK</h1>
       <button className="btn btn-primary me-2" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
       <button className="btn btn-secondary me-2" onClick={clearMemory}>Clear</button>
