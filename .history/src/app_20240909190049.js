@@ -13,7 +13,7 @@ function App() {
   const [usdcBalance, setUsdcBalance] = useState(null);
 
   useEffect(() => {
-    console.log('Coinbase Wallet SDK loaded successfully!');
+    console.log('Coinbase Wallet SDK loaded successfully!!!');
   }, []);
 
   const connectCoinbaseWallet = async () => {
@@ -104,7 +104,7 @@ function App() {
 
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">NOOK</h1>
+      <h1 className="mb-4">NOOK!</h1>
       <button className="btn btn-primary me-2" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
       <button className="btn btn-secondary me-2" onClick={clearMemory}>Clear</button>
       <button className="btn btn-info me-2" onClick={updateUSDCBalance}>Show USDC Balance</button>

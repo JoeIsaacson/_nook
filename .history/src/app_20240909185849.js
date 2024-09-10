@@ -13,7 +13,7 @@ function App() {
   const [usdcBalance, setUsdcBalance] = useState(null);
 
   useEffect(() => {
-    console.log('Coinbase Wallet SDK loaded successfully!');
+    console.log('Coinbase Wallet SDK loaded successfully!!!');
   }, []);
 
   const connectCoinbaseWallet = async () => {
