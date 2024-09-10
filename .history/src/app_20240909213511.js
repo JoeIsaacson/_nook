@@ -7,9 +7,21 @@ const USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e'; // BASE Sepol
 const RECIPIENT_ADDRESS = '0xcDeBcF59Ee33978320CA2ebCD433aCE6144C63C4'; // JMART
 const TRANSFER_AMOUNT = '0.01';
 
+const NFT_CONTRACT_ADDRESS = '0x...'; // Replace with the actual NFT contract address
+const NFT_ABI = [
+  {
+    "constant": true,
+    "inputs": [{"name": "_owner", "type": "address"}],
+    "name": "balanceOf",
+    "outputs": [{"name": "", "type": "uint256"}],
+    "type": "function"
+  }
+];
+
 function App() {
   const [web3, setWeb3] = useState(null);
   const [userAddress, setUserAddress] = useState(null);
+  const [nftCount, setNftCount] = useState(0);
 
   useEffect(() => {
     console.log('Coinbase Wallet SDK loaded successfully!');
@@ -68,14 +80,33 @@ function App() {
     setUserAddress(null);
   };
 
+  const countNFTs = async () => {
+    if (!web3 || !userAddress) {
+      console.error('Web3 or user address not available');
+      return;
+    }
+
+    try {
+      const nftContract = new web3.eth.Contract(NFT_ABI, NFT_CONTRACT_ADDRESS);
+      const balance = await nftContract.methods.balanceOf(userAddress).call();
+      setNftCount(parseInt(balance));
+      console.log(`Number of NFTs: ${balance}`);
+    } catch (error) {
+      console.error('Error counting NFTs:', error);
+    }
+  };
+
   return (
     <div className="container mt-5">
-      <h1 className="mb-4">NOOK</h1>
+      <h1 className="mb-4">NOOK!</h1>
       <button className="btn btn-primary me-2" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
       <button className="btn btn-secondary me-2" onClick={clearMemory}>Clear</button>
       {userAddress && <div className="mt-3">Connected: {userAddress}</div>}
       
       <button className="btn btn-success mt-3" onClick={approveAndTransfer}>Approve and Transfer 0.01 USDC</button>
+      
+      <button className="btn btn-info mt-3 ms-2" onClick={countNFTs}>Count NFTs</button>
+      {nftCount > 0 && <div className="mt-3">Number of NFTs: {nftCount}</div>}
     </div>
   );
 }
