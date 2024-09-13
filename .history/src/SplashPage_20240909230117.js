@@ -17,7 +17,7 @@ function SplashPage() {
       </header>
 
       <div class="animatied-content">
-        <h1 className="text-center logo">N</h1>
+        <h1 className="text-center">N</h1>
       </div>
       
       <div className="warm-welcome-message flex-grow-1 d-flex flex-column justify-content-end">

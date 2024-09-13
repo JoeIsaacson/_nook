@@ -2,26 +2,14 @@ body {
     font-family: 'Inter', sans-serif;
 }
 
-.body-container {
-    --bs-gutter-x: 1.5rem;
-    padding-left: 24px;
-    padding-right: 24px;
-}
-
-.bg-light {
-    background-color: #C8C8C8 !important;
-}
-
 .container-custom {
   width: 375px;
   height: 812px;
   border: 1px solid black;
-  border-radius: 36px;
-  overflow: hidden;
+  border-radius: 12px;
 }
 
 /* Override Bootstrap primary button styles */
-
 .btn-primary {
   display: block;
   width: 100%;
@@ -44,29 +32,16 @@ body {
 }
 
 /* super custom stuff */
-
 .splash-page {
-    .animated-content {
+    .animation {
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
+        background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
         z-index: -1;
         opacity: 0.3;
-    }
-
-    H1.logo {
-        font-size: 100px;
-        font-weight: 900;
-        color: #fff;
-    }
-
-    .warm-welcome-message {
-        position: absolute;
-        bottom: 80px;
-        left: 0;
-        right: 0;
-    }
+      }
 }
 

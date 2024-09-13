@@ -16,8 +16,7 @@ body {
   width: 375px;
   height: 812px;
   border: 1px solid black;
-  border-radius: 36px;
-  overflow: hidden;
+  border-radius: 12px;
 }
 
 /* Override Bootstrap primary button styles */
@@ -54,13 +53,14 @@ body {
         bottom: 0;
         z-index: -1;
         opacity: 0.3;
+
+        H1 {
+            font-size: 200px;
+            font-weight: 900;
+            color: #000;
+        }
     }
 
-    H1.logo {
-        font-size: 100px;
-        font-weight: 900;
-        color: #fff;
-    }
 
     .warm-welcome-message {
         position: absolute;

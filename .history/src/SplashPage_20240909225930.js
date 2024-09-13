@@ -16,14 +16,12 @@ function SplashPage() {
         </div>
       </header>
 
-      <div class="animatied-content">
-        <h1 className="text-center logo">N</h1>
-      </div>
+      <div class="animatied-content"></div>
       
       <div className="warm-welcome-message flex-grow-1 d-flex flex-column justify-content-end">
         <div className="body-container">
           <h1 className="mb-1 justify-content-center">Welcome to</h1>
-          <h1 className="justify-content-center">Nook</h1>
+          <h1 className="justify-content-center">NOOK</h1>
         </div>
       </div>
 

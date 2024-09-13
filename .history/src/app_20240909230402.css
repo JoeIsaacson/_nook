@@ -17,7 +17,6 @@ body {
   height: 812px;
   border: 1px solid black;
   border-radius: 36px;
-  overflow: hidden;
 }
 
 /* Override Bootstrap primary button styles */

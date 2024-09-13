@@ -1,0 +1,16 @@
+.container-custom {
+  width: 375px;
+  height: 812px;
+  border: 1px solid black;
+  border-radius: 12px;
+}
+
+/* Override Bootstrap primary button styles */
+.btn-primary {
+  display: block;
+  width: 100%;
+  border-radius: 20x;
+  border: 1px solid black;
+  background-color: white;
+  color: #000;
+}
