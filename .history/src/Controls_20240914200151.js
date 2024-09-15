@@ -41,8 +41,9 @@ function Controls() {
       <div className="route-content">
         <Outlet />
       </div>
-      <button className="persistent-button" onClick={handleButtonClick}>Refresh</button>
-      <button className="persistent-button" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
+      <button className="persistent-button" onClick={handleButtonClick}>
+        Clear 
+      </button>
     </div>
   );
 }

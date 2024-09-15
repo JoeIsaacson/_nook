@@ -6,7 +6,6 @@ import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 function Controls() {
   const navigate = useNavigate();
   const [web3, setWeb3] = useState(null);
-  const [userAddress, setUserAddress] = useState(null);
 
   const connectCoinbaseWallet = async () => {
     const coinbaseWallet = new CoinbaseWalletSDK({
@@ -20,6 +19,7 @@ function Controls() {
     try {
       const accounts = await provider.request({ method: 'eth_requestAccounts' });
       const web3Instance = new Web3(provider);
+      //const [userAddress, setUserAddress] = useState(null);
       // reset
       setWeb3(web3Instance);
       setUserAddress(accounts[0]);
@@ -41,8 +41,9 @@ function Controls() {
       <div className="route-content">
         <Outlet />
       </div>
-      <button className="persistent-button" onClick={handleButtonClick}>Refresh</button>
-      <button className="persistent-button" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
+      <button className="persistent-button" onClick={handleButtonClick}>
+        Clear 
+      </button>
     </div>
   );
 }
