@@ -42,7 +42,7 @@ function Controls() {
         <div className='col-6'>
         <div className="route-content">
 
-          <div className='container container-custom mt-5'>
+          <div className='container  mt-5'>
             <button className="persistent-button" onClick={handleButtonClick}>Refresh</button>
             <button className="persistent-button" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
           </div>

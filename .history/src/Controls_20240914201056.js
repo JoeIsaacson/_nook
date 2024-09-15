@@ -40,13 +40,9 @@ function Controls() {
     <div className="app-container">
       <div className='row'>
         <div className='col-6'>
-        <div className="route-content">
-
-          <div className='container container-custom mt-5'>
+          <div className='container-custom'>
             <button className="persistent-button" onClick={handleButtonClick}>Refresh</button>
             <button className="persistent-button" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
-          </div>
-
           </div>
         </div>
 
