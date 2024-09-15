@@ -1,0 +1,6 @@
+.container-custom {
+  width: 375px;
+  height: 812px;
+  border: 1px solid black;
+  border-radius: 12px;
+}

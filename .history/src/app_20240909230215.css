@@ -1,0 +1,72 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.body-container {
+    --bs-gutter-x: 1.5rem;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.bg-light {
+    background-color: #C8C8C8 !important;
+}
+
+.container-custom {
+  width: 375px;
+  height: 812px;
+  border: 1px solid black;
+  border-radius: 12px;
+}
+
+/* Override Bootstrap primary button styles */
+
+.btn-primary {
+  display: block;
+  width: 100%;
+  border-radius: 80px;
+  border: 1px solid black;
+  background-color: white;
+  color: #000;
+}
+
+.container-custom {
+    --bs-gutter-x: 1px 1px;
+    position: relative;
+    overflow: hidden;
+
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+}
+
+/* super custom stuff */
+
+.splash-page {
+    .animated-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        opacity: 0.3;
+
+        H1 {
+            font-size: 200px;
+            font-weight: 900;
+            color: red;
+        }
+    }
+
+
+    .warm-welcome-message {
+        position: absolute;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+    }
+}
+
