@@ -87,17 +87,15 @@ function App() {
 
   return (
     <div className="container mt-5 container-custom">
-
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">_NOOK</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+     
+      <header className="text-center text-lg-start">
+        <div className="container p-4">
+            <h1 className="">NOOK!</h1>
         </div>
-      </nav>
+      </header>
 
       <div className="container mt-5">
+        <button className="btn btn-primary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
         <button className="btn btn-secondary" onClick={clearMemory}>Clear</button>
         {userAddress && <div className="mt-3">Connected: {userAddress}</div>}
       
@@ -105,14 +103,7 @@ function App() {
       
         <button className="btn btn-info" onClick={checkEthBalance}>Check ETH Balance</button>
         {ethBalance !== null && <div className="mt-3">ETH Balance: {ethBalance} ETH</div>}
-      </div>
-
-      <footer className="text-center">
-        <div className="container p-4">
-          <button className="btn btn-primary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
-        </div>
-      </footer>
-
+       </div>
     </div>
 
   );

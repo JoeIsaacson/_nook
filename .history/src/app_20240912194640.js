@@ -87,6 +87,7 @@ function App() {
 
   return (
     <div className="container mt-5 container-custom">
+     
 
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -107,8 +108,8 @@ function App() {
         {ethBalance !== null && <div className="mt-3">ETH Balance: {ethBalance} ETH</div>}
       </div>
 
-      <footer className="text-center">
-        <div className="container p-4">
+      <footer>
+        <div className="container">
           <button className="btn btn-primary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
         </div>
       </footer>

@@ -87,6 +87,7 @@ function App() {
 
   return (
     <div className="container mt-5 container-custom">
+     
 
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
@@ -106,12 +107,13 @@ function App() {
         <button className="btn btn-info" onClick={checkEthBalance}>Check ETH Balance</button>
         {ethBalance !== null && <div className="mt-3">ETH Balance: {ethBalance} ETH</div>}
       </div>
+    </div>
 
-      <footer className="text-center">
-        <div className="container p-4">
-          <button className="btn btn-primary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
-        </div>
-      </footer>
+    <footer>
+      <div className="container">
+        <button className="btn btn-primary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
+      </div>
+    </footer>
 
     </div>
 
