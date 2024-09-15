@@ -7,7 +7,6 @@ function Controls() {
   const navigate = useNavigate();
   const [web3, setWeb3] = useState(null);
   const [userAddress, setUserAddress] = useState(null);
-  const [ethBalance, setEthBalance] = useState(null);
 
   const connectCoinbaseWallet = async () => {
     const coinbaseWallet = new CoinbaseWalletSDK({
@@ -43,7 +42,6 @@ function Controls() {
     } catch (error) {
       console.error('Error fetching ETH balance:', error);
     }
-  };
 
   const handleButtonClick = () => {
     // Toggle between routes

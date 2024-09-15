@@ -7,7 +7,6 @@ function Controls() {
   const navigate = useNavigate();
   const [web3, setWeb3] = useState(null);
   const [userAddress, setUserAddress] = useState(null);
-  const [ethBalance, setEthBalance] = useState(null);
 
   const connectCoinbaseWallet = async () => {
     const coinbaseWallet = new CoinbaseWalletSDK({
@@ -28,20 +27,6 @@ function Controls() {
       console.log(web3Instance);
     } catch (error) {
       console.error('Failed to connect Coinbase Wallet:', error);
-    }
-  };
-
-  const checkEthBalance = async () => {
-    if (!web3 || !userAddress) return;
-
-    try {
-      const balance = await web3.eth.getBalance(userAddress);
-      console.log(balance);
-      const balanceInEth = web3.utils.fromWei(balance, 'ether');
-      setEthBalance(balanceInEth);
-      console.log(`ETH Balance: ${balanceInEth} ETH`);
-    } catch (error) {
-      console.error('Error fetching ETH balance:', error);
     }
   };
 

@@ -19,6 +19,10 @@ body {
   overflow: hidden;
 }
 
+.border {
+    border: 1px solid black;
+}
+
 /* Override Bootstrap primary button styles */
 
 .btn-primary {

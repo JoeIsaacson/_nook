@@ -43,7 +43,6 @@ function Controls() {
     } catch (error) {
       console.error('Error fetching ETH balance:', error);
     }
-  };
 
   const handleButtonClick = () => {
     // Toggle between routes

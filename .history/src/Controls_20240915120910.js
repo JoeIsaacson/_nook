@@ -7,7 +7,6 @@ function Controls() {
   const navigate = useNavigate();
   const [web3, setWeb3] = useState(null);
   const [userAddress, setUserAddress] = useState(null);
-  const [ethBalance, setEthBalance] = useState(null);
 
   const connectCoinbaseWallet = async () => {
     const coinbaseWallet = new CoinbaseWalletSDK({
@@ -31,20 +30,6 @@ function Controls() {
     }
   };
 
-  const checkEthBalance = async () => {
-    if (!web3 || !userAddress) return;
-
-    try {
-      const balance = await web3.eth.getBalance(userAddress);
-      console.log(balance);
-      const balanceInEth = web3.utils.fromWei(balance, 'ether');
-      setEthBalance(balanceInEth);
-      console.log(`ETH Balance: ${balanceInEth} ETH`);
-    } catch (error) {
-      console.error('Error fetching ETH balance:', error);
-    }
-  };
-
   const handleButtonClick = () => {
     // Toggle between routes
     const currentPath = window.location.pathname;
@@ -60,14 +45,8 @@ function Controls() {
               <div class="row justify-content-md-center">
                 <div class="col col-sm-8">
                     <div class="vstack gap-3">
-                      <button className="btn btn-secondary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
-                      {userAddress && <div className="mt-3">Connected: {userAddress}</div>}
-
-                      <button className="btn btn-info" onClick={checkEthBalance}>Check ETH Balance</button>
-                      {ethBalance !== null && <div className="mt-3">ETH Balance: {ethBalance} ETH</div>}
-
-                      {/* This does not clear it refreshes the app */}
                       <button className="btn btn-secondary" onClick={handleButtonClick}>Refresh</button>
+                      <button className="btn btn-secondary" onClick={connectCoinbaseWallet}>Connect Coinbase Wallet</button>
                     </div>
                 </div>    
               </div>
