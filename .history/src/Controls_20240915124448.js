@@ -71,7 +71,7 @@ function Controls() {
                       <button className="btn btn-info" onClick={checkEthBalance}>Check ETH Balance</button>
                       {ethBalance !== null && 
                       <div className="balance-container">
-                        <p className="mt-3 label fs-6 text-uppercase">ETH Balance</p>
+                        <p className="mt-3">ETH Balance</p>
                         <p className="text-break">{ethBalance} ETH</p>
                       </div>
                       }
