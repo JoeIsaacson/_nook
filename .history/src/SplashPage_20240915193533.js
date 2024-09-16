@@ -12,7 +12,8 @@ function SplashPage() {
   return (
     <div className="splash-page bg-light container mt-5 container-custom d-flex flex-column">
       <header className="text-center text-lg-start">
-        <div className="container p-4"></div>
+        <div className="container p-4">WHAT
+        </div>
       </header>
 
       <div class="animatied-content">

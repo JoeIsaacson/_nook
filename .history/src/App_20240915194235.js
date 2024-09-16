@@ -13,7 +13,9 @@ function App() {
           <a className="navbar-brand" href="#">_NOOK</a>
           
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i className="bi bi-box-seam"></i>
+            <svg className="bi" aria-hidden="true">
+              <use xlinkHref="#box-seam"></use>
+            </svg>
           </button>
         </div>
       </nav>
