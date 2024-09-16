@@ -10,15 +10,10 @@ function App() {
 
       <nav className="navbar">
         <div className="container-fluid">
+          <a className="navbar-brand" href="#">_NOOK</a>
+          
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="bi bi-gear-fill"></i>
-          </button>
-
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span>JI</span>
-          </button>
-          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i className="bi bi-bell-fill"></i>
+            <i className="bi bi-app-indicator"></i>
           </button>
         </div>
       </nav>
